@@ -1,49 +1,94 @@
-# LUFY X DONATE V2
-ธีม Dark Purple / Neon พร้อมพื้นหลังดาวและเอฟเฟกต์ดาวตก
+# LUFY X DONATE V6 — Production-oriented Creator Donation Platform
 
-## แพ็กเกจ
-FREE = 20 ครั้ง
-PRO = 29 บาท/เดือน
-PROMAX = 59 บาท/เดือน
+V6 ปรับจากภาพอ้างอิงของ Dashboard ที่ให้มา โดยเอา Demo ออกจากหน้าเว็บหลัก และเพิ่มระบบบัญชี/เครดิต/เติมเงิน/ยืนยัน Gmail
 
-## ฟีเจอร์
-- หน้า Creator /u/username
-- Donation form
-- PromptPay field
-- Donation history
-- Donation Alert /alert/username สำหรับต่อกับ OBS
-- Video Creator: YouTube / Shorts / TikTok / Vimeo
-- Admin จัดการผู้ใช้และแพ็กเกจ
-- พื้นหลังดาว + ดาวตก
-- Responsive
+## สิ่งที่มีใน V6
+- หน้า Home LUFY X DONATE ธีม Dark Purple / Neon + ดาว
+- ไม่มีลิงก์ Demo และไม่มีเมนู "สมาชิก" บนหน้า Home
+- สมัครสมาชิกด้วย Gmail + ยืนยันอีเมลก่อน Login
+- Login / Logout / Session
+- ลืมรหัสผ่าน + reset ผ่านอีเมล
+- Dashboard Sidebar ตามเมนู Creator
+- PromptPay / TrueMoney สำหรับหน้า Creator
+- Donation Alert + TTS + ตั้งเสียง/ความเร็ว/โทน/กรองคำหยาบ
+- PROMAX รับลิงก์ YouTube/TikTok/Vimeo ตอนโดเนทได้แบบ optional
+- FREE 20 ครั้ง / PRO 29 บาท / PROMAX 59 บาท ต่อ 30 วัน
+- ระบบเครดิต: ค่าเริ่มต้น 1 บาท = 1 เครดิต
+- เติมเครดิตด้วย PromptPay / TrueMoney ซองอั่งเปา / โอนบัญชีธนาคาร
+- แนบสลิป JPG/PNG/WEBP สูงสุด 10 MB
+- Admin ตรวจสลิป -> อนุมัติ -> เครดิตเข้าบัญชี
+- ซื้อ PRO/PROMAX ด้วยเครดิต
+- Credit transaction ledger และประวัติเติมเงิน
+- Admin ดูสมาชิก / เติมเครดิต / รายการโดเนท
+- OBS Browser Source: `/alert/USERNAME`
+- Creator page: `/u/USERNAME`
 
-## รัน
+## รันในเครื่อง
 Node.js 20+
+
+```bash
 npm install
 npm start
-http://localhost:3000
+```
 
-Admin: http://localhost:3000/admin
-ตัวอย่าง Creator: http://localhost:3000/u/demo
+เปิด `http://localhost:3000`
 
-## ค่า Admin
-สร้าง .env จาก .env.example และเปลี่ยน ADMIN_PASSWORD + SESSION_SECRET ก่อนเปิดสาธารณะ
+## Gmail verification
+แนะนำใช้ Gmail + Google App Password (ไม่ใช่รหัสผ่าน Gmail หลัก) แล้วตั้งค่าใน `.env`:
 
-## สำคัญ
-ระบบโดเนทชุดนี้เป็น ledger/demo ยังไม่ยืนยันการโอนเงินจริงอัตโนมัติ และยังไม่ปลด PRO/PROMAX จากการชำระเงินเอง
-หากนำขึ้นใช้งานจริง ควรเชื่อม Payment Gateway + webhook ก่อนเปิดขายแพ็กเกจ
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=yourgmail@gmail.com
+SMTP_PASS=YOUR_GMAIL_APP_PASSWORD
+MAIL_FROM=LUFY X DONATE <yourgmail@gmail.com>
+```
 
-\n## V3 additions\n- PromptPay: แนบสลิป JPG/PNG/WEBP สูงสุด 10MB\n- TrueMoney Wallet: รองรับลิงก์ซองอั่งเปา\n- PROMAX: แนบลิงก์คลิปตอนโดเนทได้แบบ optional\n- Admin เห็นช่องทางชำระเงิน สลิป และคลิป\n- การตรวจสอบสลิปยังเป็น manual; ยังไม่ได้ยืนยันเงินเข้าอัตโนมัติ\n
+ถ้า SMTP ยังไม่ตั้งค่า ระบบจะไม่ส่งเมลจริง และจะพิมพ์ลิงก์ยืนยันลง Server log สำหรับทดสอบเท่านั้น
 
-## V4 Member Dashboard
-เพิ่มหน้า /dashboard สำหรับสมาชิก โดยมี Sidebar และหน้าตั้งค่า Widget ตามแนวภาพอ้างอิง: เสียงแจ้งเตือน/TTS, ความเร็ว, Pitch, Volume, วิดีโอ YouTube/TikTok, ระยะเวลาวิดีโอ, ตัวกรองคำหยาบ, ธีม Widget, โปรไฟล์, PromptPay, ลิงก์ซองอั่งเปา, เป้าหมายโดเนท, Quota และประวัติโดเนท
+## ช่องทางเติมเครดิตของเว็บ
+ตั้งค่าใน `.env`:
+
+```env
+PROMPTPAY_ID=0812345678
+TRUEWALLET_LINK=https://gift.truemoney.com/campaign/?v=YOUR_ENVELOPE
+BANK_NAME=ชื่อธนาคาร
+BANK_ACCOUNT_NAME=ชื่อเจ้าของบัญชี
+BANK_ACCOUNT_NO=1234567890
+CREDIT_PER_BAHT=1
+```
+
+หลักการคือสมาชิกโอนเงินจริง -> แนบสลิป -> Admin ตรวจ -> อนุมัติ -> เครดิตเข้าบัญชี
+
+> ระบบนี้ไม่ได้แอบอ้างว่า "ตรวจเงินเข้าอัตโนมัติ" จากสลิป การอนุมัติ V6 เป็น manual โดย Admin ซึ่งปลอดภัยกว่าการให้ระบบเชื่อสลิปจากรูปเพียงอย่างเดียว
+
+## Production / Railway
+ถ้าจะเปิดใช้งานจริง ควรมี Persistent Volume สำหรับ `/app/data` เพราะ V6 ใช้ SQLite + เก็บสลิปใน data/uploads
+
+ถ้าจะรองรับผู้ใช้จำนวนมาก แนะนำย้ายฐานข้อมูลจาก SQLite ไป PostgreSQL และย้ายไฟล์สลิปไป Object Storage (S3/R2/Cloudinary ฯลฯ)
+
+ต้องเปลี่ยนอย่างน้อย:
+
+```env
+NODE_ENV=production
+PUBLIC_URL=https://โดเมนของคุณ
+ADMIN_PASSWORD=รหัสยาวและสุ่มใหม่
+SESSION_SECRET=ค่าสุ่มยาวมาก
+```
+
+## Admin
+- URL: `/admin`
+- ค่าเริ่มต้นจาก `.env`: `ADMIN_USER` / `ADMIN_PASSWORD`
+- ใช้สำหรับตรวจสลิปเติมเครดิตและรายการโดเนท
+
+## หมายเหตุการอัปเกรดจาก V5
+V6 เปลี่ยนโครงสร้างสมาชิกโดยเพิ่ม Gmail verification และ credit wallet อย่างมีนัยสำคัญ หากฐานข้อมูล V5 มีข้อมูลจริง ให้สำรอง `/app/data` ก่อนอัปเกรด และทดสอบ migration บนสำเนาก่อนเปิดใช้งานจริง
 
 
-# V5 production notes
-- สมาชิกใช้ username + password (password ถูก hash ด้วย Node crypto.scrypt)
-- FREE จำกัด 20 รายการโดเนท; PRO/PROMAX ไม่จำกัด
-- อัปเกรด PRO/PROMAX: สมาชิกแนบสลิป -> Admin อนุมัติ -> ระบบเปลี่ยนแพ็กเกจ 30 วันและรีเซ็ต quota
-- PromptPay/TrueMoney สำหรับ Creator ตั้งได้จาก Dashboard
-- PROMAX รองรับลิงก์คลิปตอนโดเนทแบบ optional
-- สำหรับ Railway/โฮสต์ที่ filesystem ไม่ถาวร ให้ใช้ persistent volume ที่ /app/data และ /app/public/uploads หรือเปลี่ยนไปใช้ object storage/PostgreSQL ก่อนเปิดสาธารณะ
-- ตั้งค่า NODE_ENV=production, ADMIN_PASSWORD และ SESSION_SECRET ใหม่ก่อน deploy
+## V6.1 Payment behavior
+- Email verification has been removed. Registration can proceed without clicking an email link.
+- Member top-up via TrueMoney uses `TRUEWALLET_OWNER_PHONE` as the owner receiving number.
+- Creator donation via TrueMoney uses each creator's `truewallet_phone` configured in Dashboard > ช่องทางรับเงิน.
+- PromptPay/bank top-ups still use slip review by Admin.
+- The site does not directly move TrueMoney funds by itself. Without an official TrueMoney merchant/API integration, the browser can only show/copy the recipient phone or open a configured link; the actual transfer must be completed in TrueMoney.
